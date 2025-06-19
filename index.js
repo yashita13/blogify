@@ -36,9 +36,6 @@ app.use(express.static(path.resolve("./public")));
 
 
 app.get("/", async (req, res) => {
-    console.log("req.user:", req.user);         // log user injected by middleware
-    console.log("res.locals.user:", res.locals.user); // if you already set it in middleware
-
     const allBlogs = await Blog.find({});
     res.render("home", {
         user: req.user,
