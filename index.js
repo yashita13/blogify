@@ -27,10 +27,18 @@ app.set("views", path.resolve("./views"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkAuthenticationCookie("token"));
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
+
 app.use(express.static(path.resolve("./public")));
 
 
 app.get("/", async (req, res) => {
+    console.log("req.user:", req.user);         // log user injected by middleware
+    console.log("res.locals.user:", res.locals.user); // if you already set it in middleware
+
     const allBlogs = await Blog.find({});
     res.render("home", {
         user: req.user,
@@ -45,4 +53,4 @@ app.listen(PORT, () => console.log(`Server started at PORT: ${PORT}`));
 
 //for deploying on AWS, index=app.js
 
-//mongodb+srv://yashitabahrani:yashita13@cluster0.gvcuuu0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+//mongodb+srv://yashitabahrani:YourPasswordHere@cluster0.gvcuuu0.mongodb.net/blogify?retryWrites=true&w=majority&appName=Cluster0
